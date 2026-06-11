@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.output
+.tanstack
+.wrangler
+.env
+.DS_Store
+.idea
+.vscode
+logs

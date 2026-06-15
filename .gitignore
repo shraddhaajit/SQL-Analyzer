@@ -18,3 +18,6 @@ env/
 ml_pipeline/models/
 ml_pipeline/outputs/
 ml_pipeline/mock_dataset.csv
+*.pyc
+dataset.csv
+generated_queries.csv

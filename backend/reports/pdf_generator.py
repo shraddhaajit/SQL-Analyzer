@@ -1,12 +1,18 @@
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
-    Spacer
+    Spacer,
+    PageBreak
 )
 
 from reportlab.lib.styles import (
     getSampleStyleSheet
 )
+
+from datetime import datetime
+
+
+from datetime import datetime
 
 
 def generate_report(
@@ -14,6 +20,7 @@ def generate_report(
     prediction,
     risk_level,
     recommendations,
+    features=None,
     output_file="report.pdf"
 ):
 
@@ -27,13 +34,27 @@ def generate_report(
 
     content.append(
         Paragraph(
-            "SQL Query Analysis Report",
+            "SQL Query Performance Analysis Report",
             styles["Title"]
         )
     )
 
     content.append(
-        Spacer(1, 12)
+        Paragraph(
+            f"Generated: {datetime.now()}",
+            styles["BodyText"]
+        )
+    )
+
+    content.append(
+        Spacer(1, 15)
+    )
+
+    content.append(
+        Paragraph(
+            "Query Information",
+            styles["Heading1"]
+        )
     )
 
     content.append(
@@ -44,8 +65,19 @@ def generate_report(
     )
 
     content.append(
+        Spacer(1, 12)
+    )
+
+    content.append(
         Paragraph(
-            f"<b>Prediction:</b> {prediction} ms",
+            "Prediction Summary",
+            styles["Heading1"]
+        )
+    )
+
+    content.append(
+        Paragraph(
+            f"<b>Predicted Execution Time:</b> {prediction} ms",
             styles["BodyText"]
         )
     )
@@ -61,10 +93,42 @@ def generate_report(
         Spacer(1, 12)
     )
 
+    if features:
+
+        content.append(
+            Paragraph(
+                "Feature Summary",
+                styles["Heading1"]
+            )
+        )
+
+        important_features = [
+            "table_count",
+            "join_count",
+            "subquery_count",
+            "planner_total_cost",
+            "complexity_score"
+        ]
+
+        for feature in important_features:
+
+            if feature in features:
+
+                content.append(
+                    Paragraph(
+                        f"<b>{feature}</b>: {features[feature]}",
+                        styles["BodyText"]
+                    )
+                )
+
+        content.append(
+            Spacer(1, 12)
+        )
+
     content.append(
         Paragraph(
-            "Recommendations",
-            styles["Heading2"]
+            "Optimization Recommendations",
+            styles["Heading1"]
         )
     )
 
@@ -72,9 +136,31 @@ def generate_report(
 
         content.append(
             Paragraph(
-                f"- {item['rule']}",
+                f"<b>{item['rule']}</b>",
                 styles["BodyText"]
             )
+        )
+
+        if "impact" in item:
+
+            content.append(
+                Paragraph(
+                    f"Impact: {item['impact']}",
+                    styles["BodyText"]
+                )
+            )
+
+        if "recommendation" in item:
+
+            content.append(
+                Paragraph(
+                    f"Recommendation: {item['recommendation']}",
+                    styles["BodyText"]
+                )
+            )
+
+        content.append(
+            Spacer(1, 8)
         )
 
     doc.build(content)

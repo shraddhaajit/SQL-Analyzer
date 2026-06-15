@@ -51,6 +51,19 @@ def save_query(
         )
     )
 
+    cur.execute(
+        """
+        DELETE FROM query_history
+        WHERE id NOT IN
+        (
+            SELECT id
+            FROM query_history
+            ORDER BY created_at DESC
+            LIMIT 500
+        )
+        """
+    )
+
     conn.commit()
     conn.close()
 def get_history():

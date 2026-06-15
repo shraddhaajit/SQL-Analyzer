@@ -1,21 +1,11 @@
 from fastapi import FastAPI
 
-from backend.api.schemas import (
-    QueryRequest
+from backend.api.routes.analyze import (
+    router as analyze_router
 )
-
-from backend.database.db_connection import (
-    get_connection
+from backend.api.routes.export import (
+    router as export_router
 )
-
-from backend.feature_extraction.feature_vector import (
-    build_feature_vector
-)
-
-from backend.optimization.advisor import (
-    get_recommendations
-)
-
 app = FastAPI(
     title="SQL Analyzer API"
 )
@@ -30,28 +20,25 @@ def home():
     }
 
 
-@app.post("/analyze")
-def analyze_query(
-    request: QueryRequest
-):
+app.include_router(
+    analyze_router
+)
+from backend.api.routes.history import (
+    router as history_router
+)
+app.include_router(
+    analyze_router
+)
+app.include_router(
+    history_router
+)
+app.include_router(
+    analyze_router
+)
 
-    conn = get_connection()
-
-    features = build_feature_vector(
-        request.query,
-        conn
-    )
-
-    recommendations = (
-        get_recommendations(
-            request.query,
-            features
-        )
-    )
-
-    conn.close()
-
-    return {
-        "features": features,
-        "recommendations": recommendations
-    }
+app.include_router(
+    history_router
+)
+app.include_router(
+    export_router
+)

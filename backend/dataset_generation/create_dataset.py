@@ -41,9 +41,25 @@ def create_dataset():
             )
 
             features[
-                "execution_time_ms"
+                "median_execution_time_ms"
             ] = execution_time
 
+            score = features[
+                "complexity_score"
+            ]
+
+            if score < 20:
+                tier = 1
+            elif score < 40:
+                tier = 2
+            elif score < 60:
+                tier = 3
+            elif score < 80:
+                tier = 4
+            else:
+                tier = 5
+
+            features["tier"] = tier
             dataset_rows.append(
                 features
             )

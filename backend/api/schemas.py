@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class QueryRequest(BaseModel):
     query: str
+    model: str = "rf"
 
 
 class ExportRequest(BaseModel):
@@ -10,3 +11,4 @@ class ExportRequest(BaseModel):
     prediction: float
     risk_level: str
     recommendations: list
+    features: dict

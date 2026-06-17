@@ -17,12 +17,12 @@ def export_report(
 ):
 
     generate_report(
-    query=request.query,
-    prediction=request.prediction,
-    risk_level=request.risk_level,
-    recommendations=request.recommendations,
-    features={}
-)
+        query=request.query,
+        prediction=request.prediction,
+        risk_level=request.risk_level,
+        recommendations=request.recommendations,
+        features=request.features
+    )
 
     return {
         "message":

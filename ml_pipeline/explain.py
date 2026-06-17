@@ -11,7 +11,7 @@ from train import preprocess_data
 def generate_shap_plots():
     print("Generating complete SHAP and Explainability plots...")
     os.makedirs('outputs/plots/explainability', exist_ok=True)
-    df = pd.read_csv('mock_dataset.csv')
+    df = pd.read_csv('../dataset.csv')
     
     _, X_test, _, _, features = preprocess_data(df)
     

@@ -65,7 +65,7 @@ def train_xgb(X_train, y_train):
 
 if __name__ == "__main__":
     print("Loading data...")
-    df = pd.read_csv('mock_dataset.csv')
+    df=pd.read_csv('../dataset.csv')
     X_train, X_test, y_train, y_test, features = preprocess_data(df)
     
     os.makedirs('models', exist_ok=True)

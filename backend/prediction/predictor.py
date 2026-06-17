@@ -7,8 +7,8 @@ def predict_execution_time(
 ):
 
     prediction = model.predict(
-        [feature_vector]
-    )[0]
+    feature_vector
+)[0]
 
     prediction = np.expm1(
         prediction

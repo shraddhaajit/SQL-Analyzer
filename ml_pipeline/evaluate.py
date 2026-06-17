@@ -9,7 +9,7 @@ from train import preprocess_data
 
 def evaluate_models():
     print("Evaluating models...")
-    df = pd.read_csv('mock_dataset.csv')
+    df = pd.read_csv('../dataset.csv')
     X_train, X_test, y_train_log, y_test_log, features = preprocess_data(df)
     
     y_test = np.expm1(y_test_log) # inverse log

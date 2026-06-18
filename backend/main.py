@@ -149,12 +149,14 @@ def main():
         db_connected = False
         conn = None
         planner = {}
+        query_error = None
         
         try:
             conn = get_connection()
             db_connected = True
         except Exception as e:
             # PostgreSQL is offline; fallback to heuristics so the app continues running without error
+            print(f"PG connection failed: {e}", file=sys.stderr)
             pass
             
         if db_connected and conn:
@@ -163,12 +165,23 @@ def main():
                 planner = get_explain_features(query, conn)
                 conn.close()
             except Exception as e:
-                # If explain fails due to table missing etc, fallback to heuristics
-                db_connected = False
-                if conn:
-                    conn.close()
+                # If explain fails but connection is open, it's a query syntax/schema validation issue, not database offline.
+                import psycopg2
+                is_connection_error = isinstance(e, (psycopg2.OperationalError, psycopg2.InterfaceError))
+                print(f"PG explain failed: {e}", file=sys.stderr)
+                
+                if is_connection_error:
+                    db_connected = False
+                else:
+                    query_error = str(e).split("\n")[0] # extract first line of query compilation error
                     
-        if not db_connected:
+                if conn:
+                    try:
+                        conn.close()
+                    except:
+                        pass
+                    
+        if not db_connected or query_error is not None:
             # Dynamic mock planner statistics to avoid database constraint dependency errors
             table_count = structural.get("table_count", 1)
             join_count = structural.get("join_count", 0)
@@ -306,8 +319,8 @@ def main():
             },
             "intervals": {
                 "RF": {
-                    "lower": round(interval.get("lower", rf_pred * 0.8) / 1000.0, 4) if "interval" in locals() or "rf_interval" in locals() else round(rf_interval.get("lower", rf_pred * 0.8) / 1000.0, 4),
-                    "upper": round(interval.get("upper", rf_pred * 1.2) / 1000.0, 4) if "interval" in locals() or "rf_interval" in locals() else round(rf_interval.get("upper", rf_pred * 1.2) / 1000.0, 4)
+                    "lower": round(rf_interval.get("lower", rf_pred * 0.8) / 1000.0, 4),
+                    "upper": round(rf_interval.get("upper", rf_pred * 1.2) / 1000.0, 4)
                 } if "rf_interval" in locals() else {
                     "lower": round(rf_pred * 0.8 / 1000.0, 4),
                     "upper": round(rf_pred * 1.2 / 1000.0, 4)
@@ -318,6 +331,7 @@ def main():
             "rules": rules,
             "decision_path": dt_path,
             "db_connected": db_connected,
+            "query_error": query_error,
             "timings": {
                 "parse_ms": parse_ms,
                 "explain_ms": explain_ms,

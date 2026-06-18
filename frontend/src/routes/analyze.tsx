@@ -13,7 +13,7 @@ export const Route = createFileRoute("/analyze")({
   component: Analyze,
 });
 
-const SAMPLE = `SELECT c.name, COUNT(o.id) AS order_count, SUM(p.amount) AS total
+const SAMPLE = `SELECT c.name, COUNT(o.id) AS order_count, SUM(o.amount) AS total
 FROM customers c
 JOIN orders o ON o.customer_id = c.id
 JOIN payments p ON p.order_id = o.id
@@ -98,6 +98,11 @@ function Analyze() {
         } else {
           setResult(response);
           localStorage.setItem("sql_analyzer_current", JSON.stringify(response));
+          if (response.query_error) {
+            setError(response.query_error);
+          } else {
+            setError(null);
+          }
         }
       } catch (e: any) {
         setError(e.message || "An unexpected execution error occurred");
@@ -165,6 +170,12 @@ function Analyze() {
       } else {
         setResult(response);
         localStorage.setItem("sql_analyzer_current", JSON.stringify(response));
+        
+        if (response.query_error) {
+          setError(response.query_error);
+        } else {
+          setError(null);
+        }
         
         // Log to history SQLite database
         const predSeconds = response.predictions[model];

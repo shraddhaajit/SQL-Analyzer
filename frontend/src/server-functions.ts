@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import path from "path";
 import fs from "fs";
 
@@ -21,18 +21,13 @@ const getPythonScriptPath = (): string => {
 
 const runPythonCLI = (args: string[]): any => {
   const script = getPythonScriptPath();
-  // Escape arguments properly for shell execution
-  const escapedArgs = args.map(arg => {
-    const escaped = arg.replace(/"/g, '\\"');
-    return `"${escaped}"`;
-  }).join(" ");
-
   const scriptDir = path.dirname(script);
 
   const commandOptions = {
     encoding: "utf-8" as const,
     maxBuffer: 20 * 1024 * 1024,
-    cwd: scriptDir // Run from backend directory context to resolve imports correctly
+    cwd: scriptDir, // Run from backend directory context to resolve imports correctly
+    stdio: ["pipe", "pipe", "inherit"] as const
   };
 
   const commands = ["python", "python3", "py"];
@@ -40,8 +35,8 @@ const runPythonCLI = (args: string[]): any => {
 
   for (const cmd of commands) {
     try {
-      const fullCommand = `${cmd} "${script}" ${escapedArgs}`;
-      const output = execSync(fullCommand, commandOptions);
+      // execFileSync executes the binary directly without shell parsing, ensuring arguments are passed correctly on Windows
+      const output = execFileSync(cmd, [script, ...args], commandOptions);
       return JSON.parse(output.trim());
     } catch (err: any) {
       lastError = err;

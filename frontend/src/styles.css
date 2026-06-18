@@ -1,0 +1,146 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-butter: var(--butter);
+  --color-butter-deep: var(--butter-deep);
+  --color-sky: var(--sky);
+  --color-rose: var(--rose);
+  --color-mint: var(--mint);
+  --color-ink: var(--ink);
+  --font-display: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
+  --font-mono: "Times New Roman", Times, serif;
+}
+
+:root {
+  --radius: 0.875rem;
+
+  /* Base — barely-pink off-white */
+  --background: oklch(0.985 0.012 350);
+  --foreground: oklch(0.2 0.025 350);
+  --ink: oklch(0.18 0.03 350);
+
+  --card: oklch(1 0 0 / 0.55);
+  --card-foreground: oklch(0.2 0.025 350);
+
+  --popover: oklch(0.99 0.01 350);
+  --popover-foreground: oklch(0.2 0.025 350);
+
+  --primary: oklch(0.32 0.08 350);
+  --primary-foreground: oklch(0.98 0.012 350);
+
+  --secondary: oklch(0.95 0.03 350);
+  --secondary-foreground: oklch(0.3 0.06 350);
+
+  --muted: oklch(0.95 0.02 350);
+  --muted-foreground: oklch(0.52 0.04 350);
+
+  --accent: oklch(0.92 0.08 350);
+  --accent-foreground: oklch(0.3 0.08 350);
+
+  --destructive: oklch(0.64 0.18 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.88 0.03 350 / 0.65);
+  --input: oklch(0.92 0.025 350);
+  --ring: oklch(0.78 0.12 350);
+
+  /* Pastel pink palette */
+  --butter: oklch(0.92 0.1 350);
+  --butter-deep: oklch(0.82 0.16 350);
+  --sky: oklch(0.92 0.06 320);
+  --rose: oklch(0.9 0.1 20);
+  --mint: oklch(0.93 0.05 340);
+
+  --shadow-soft: 0 1px 2px oklch(0.3 0.08 350 / 0.05), 0 8px 30px oklch(0.5 0.12 350 / 0.08);
+  --shadow-glow: 0 0 0 1px oklch(1 0 0 / 0.6) inset, 0 20px 60px oklch(0.75 0.13 350 / 0.22);
+
+  --glass-bg: oklch(1 0 0 / 0.5);
+  --glass-border: oklch(1 0 0 / 0.7);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+}
+
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility glass-strong {
+  background: oklch(1 0 0 / 0.7);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid oklch(1 0 0 / 0.8);
+  box-shadow: var(--shadow-glow);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(2%, -3%) scale(1.05); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility animate-float-slow {
+  animation: float-slow 14s ease-in-out infinite;
+}

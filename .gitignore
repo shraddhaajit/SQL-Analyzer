@@ -1,0 +1,48 @@
+# Node.js dependencies and build outputs
+node_modules/
+dist/
+build/
+.output/
+.tanstack/
+.wrangler/
+.env
+
+# Python compilation and environment files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+venv/
+.venv/
+env/
+
+# Editor and OS settings
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# SQLite databases and history logs
+*.db
+history.db
+backend/history.db
+logs/
+
+# Machine Learning models and pipelines
+*.joblib
+backend/models/
+ml_pipeline/models/
+
+# Generated dataset CSVs
+dataset.csv
+generated_queries.csv
+ml_pipeline/mock_dataset.csv
+
+# Compiled PDF reports and temp outputs
+outputs/
+report.pdf
+report_*.pdf

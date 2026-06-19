@@ -67,10 +67,18 @@ const FEATURE_ORDER = [
   "complexity_score"
 ];
 
-function getRisk(seconds: number): "low" | "med" | "high" {
-  if (seconds <= 1.0) return "low";
-  if (seconds <= 3.0) return "med";
-  return "high";
+function getRisk(
+  complexity: number,
+  prediction: number
+): "low" | "med" | "high" {
+
+  if (complexity >= 65 || prediction >= 3)
+    return "high";
+
+  if (complexity >= 35 || prediction >= 1)
+    return "med";
+
+  return "low";
 }
 
 function Analyze() {
@@ -179,11 +187,12 @@ function Analyze() {
         
         // Log to history SQLite database
         const predSeconds = response.predictions[model];
+        const complexityScore = response.features.complexity_score;
         await saveHistoryFn({
           data: {
             query: sql,
             prediction: predSeconds,
-            risk: getRisk(predSeconds),
+            risk: getRisk(complexityScore, predSeconds),
             model: model,
             rulesCount: response.rules.length
           }
@@ -205,9 +214,9 @@ function Analyze() {
   };
 
   const activePred = result ? result.predictions[model] : 2.1;
-  const activeRisk = getRisk(activePred);
-  const interval = result ? result.intervals.RF : { lower: 1.8, upper: 2.7 };
   const complexity = result ? result.features.complexity_score : 62;
+  const activeRisk = getRisk(complexity, activePred);
+  const interval = result ? result.intervals.RF : { lower: 1.8, upper: 2.7 };
   const dbConnected = result ? result.db_connected : false;
 
   return (

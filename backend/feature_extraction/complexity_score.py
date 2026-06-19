@@ -59,7 +59,7 @@ def calculate_complexity_score(features, max_cost=15000):
     # A max-complexity query (cross join + 5 subqueries + 7 joins + …)
     # gives structural ≈ 195 + cost ≈ 30 + length ≈ 6 = 231.
     # We normalise to 100 against that ceiling.
-    normalized = total / 2.31
+    normalized = total / 1.2
 
     score = max(5.0, min(100.0, normalized))
     return round(score, 2)

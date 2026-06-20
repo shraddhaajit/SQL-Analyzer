@@ -32,17 +32,20 @@ history.db
 backend/history.db
 logs/
 
-# Machine Learning models and pipelines
+# Artificial Intelligence & Machine Learning pipelines
 *.joblib
 backend/models/
 ml_pipeline/models/
+# XGBoost/Random Forest cached trees
+*.json.model
+*.bin.model
 
-# Generated dataset CSVs
+# AI Dataset generation and training CSVs
 dataset.csv
 generated_queries.csv
 ml_pipeline/mock_dataset.csv
 
-# Compiled PDF reports and temp outputs
+# Explainable AI (XAI) / SHAP plots and PDF reports
 outputs/
 report.pdf
 report_*.pdf

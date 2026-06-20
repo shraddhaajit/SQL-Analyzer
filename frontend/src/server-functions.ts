@@ -35,8 +35,8 @@ const runPythonCLI = (args: string[]): any => {
 
   for (const cmd of commands) {
     try {
-      // execFileSync executes the binary directly without shell parsing, ensuring arguments are passed correctly on Windows
       const output = execFileSync(cmd, [script, ...args], commandOptions);
+      console.log("[DEBUG runPythonCLI] output:", output.trim());
       return JSON.parse(output.trim());
     } catch (err: any) {
       lastError = err;
